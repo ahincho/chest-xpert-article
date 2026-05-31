@@ -1,0 +1,28 @@
+% =============================================================================
+% ANEXOS
+% =============================================================================
+\appendix
+\section{Repositorios de c\'odigo fuente}
+\label{sec:appendix}
+
+Todo el c\'odigo fuente del proyecto est\'a disponible p\'ublicamente en GitHub bajo la cuenta \texttt{ahincho}. Los repositorios cubren el ciclo completo: desde el notebook de entrenamiento hasta el despliegue fullstack.
+
+\begin{description}[leftmargin=0pt, labelindent=0pt]
+
+    \item[\texttt{chest-xpert-ai}]
+    Notebook de entrenamiento del modelo (PyTorch + TorchXRayVision), incluyendo pipeline de datos, b\'usqueda de hiperpar\'ametros (W\&B Sweeps), auditor\'ia de equidad, Grad-CAM y exportaci\'on ONNX.\\
+    \url{https://github.com/ahincho/chest-xpert-ai}
+
+    \item[\texttt{chest-xpert-article}]
+    Fuente \LaTeX{} de este art\'iculo acad\'emico, incluyendo secciones modulares, figuras y bibliograf\'ia.\\
+    \url{https://github.com/ahincho/chest-xpert-article}
+
+    \item[\texttt{chest-xpert-backend}]
+    API REST desarrollada con FastAPI que expone el modelo ONNX mediante dos endpoints: \texttt{/predict} (inferencia en $\sim$20ms) y \texttt{/explain} (Grad-CAM).\\
+    \url{https://github.com/ahincho/chest-xpert-backend}
+
+    \item[\texttt{chest-xpert-frontend}]
+    Aplicaci\'on web desarrollada con Angular que permite cargar radiograf\'ias de t\'orax, visualizar las predicciones de las 5 patolog\'ias y los mapas de calor Grad-CAM.\\
+    \url{https://github.com/ahincho/chest-xpert-frontend}
+
+\end{description}

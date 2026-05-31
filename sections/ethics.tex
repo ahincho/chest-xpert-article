@@ -1,0 +1,32 @@
+% =============================================================================
+% 7. CONSIDERACIONES ETICAS
+% =============================================================================
+\section{Consideraciones \'eticas}
+\label{sec:ethics}
+
+\subsection{Sesgo demogr\'afico}
+
+Los modelos entrenados en CheXpert, MIMIC-CXR y NIH ChestX-ray14 subdiagnostican sistem\'aticamente a mujeres, pacientes negros, hispanos y j\'ovenes, con tasas de falsos negativos significativamente mayores en intersecciones demogr\'aficas \cite{seyyedkalantari2021bias}. Este sesgo se agrava porque las CNNs pueden predecir raza autodeclarada desde la imagen sola con AUC $>$ 0.97 \cite{gichoya2022ai}, lo que implica que la red aprende se\~nales latentes correlacionadas con demograf\'ia sin necesidad de variables expl\'icitas. Adem\'as, \cite{yang2024fairness} demostraron que los m\'etodos actuales de mitigaci\'on de fairness funcionan en distribuci\'on pero fallan al generalizar a hospitales externos.
+
+En nuestro modelo, la auditor\'ia de equidad detect\'o un gap de 9.2\% en Atelectasis (infradiagn\'ostico en mujeres) y 7.1\% en Pleural Effusion, consistente con la literatura \cite{larrazabal2020gender}. Se documenta esta limitaci\'on como hallazgo cr\'itico que requiere monitoreo continuo en producci\'on.
+
+\subsection{Explicabilidad y sus l\'imites}
+
+Se implement\'o Grad-CAM \cite{selvaraju2017gradcam} para verificar la atenci\'on anat\'omica del modelo. Sin embargo, \cite{saporta2022benchmarking} demostraron que los 7 m\'etodos de saliency evaluados (incluyendo Grad-CAM) son significativamente peores que radi\'ologos humanos en localizaci\'on de patolog\'ias. Grad-CAM es \'util como verificaci\'on de shortcut learning pero insuficiente como mecanismo \'unico de auditor\'ia cl\'inica. Se complementa con validaci\'on externa rigurosa (Secci\'on~\ref{sec:results}).
+
+\subsection{Privacidad y re-identificaci\'on}
+
+Las radiograf\'ias de t\'orax son biom\'etricamente identificables: \cite{packhauser2022reidentification} demostraron que redes siamesas pueden vincular dos CXR del mismo paciente con AUC = 0.994, incluso a\~nos despu\'es de la primera placa. Esto compromete la anonimizaci\'on est\'andar HIPAA Safe Harbor y plantea riesgos de re-identificaci\'on que deben considerarse en cualquier despliegue cl\'inico.
+
+\subsection{Marco regulatorio y supervisi\'on humana}
+
+El despliegue cl\'inico de IA diagn\'ostica est\'a regulado por m\'ultiples marcos:
+
+\begin{itemize}
+    \item \textbf{FDA}: el 97\% de dispositivos AI/ML se autorizan v\'ia 510(k) como Clase II \cite{fda2026aidevices}. Los principios GMLP exigen enfocarse en el desempe\~no del equipo humano-IA, no del modelo aislado.
+    \item \textbf{AI Act europeo}: clasifica todo SaMD con IA como alto riesgo, obligando supervisi\'on humana efectiva (Art. 14), evaluaci\'on de sesgo por subgrupos y monitoreo post-mercado \cite{euaiact2024}.
+    \item \textbf{OMS}: establece 6 principios \'eticos para IA en salud, incluyendo transparencia, equidad y protecci\'on de la autonom\'ia humana \cite{who2024ethics}.
+    \item \textbf{Sociedades radiol\'ogicas}: la declaraci\'on conjunta de ACR, CAR, ESR, RANZCR y RSNA (representando $>$100,000 radi\'ologos) establece que la IA debe operar como herramienta de apoyo bajo supervisi\'on humana \cite{brady2024multisociety}.
+\end{itemize}
+
+Nuestro sistema se posiciona como herramienta de apoyo Clase IIa: el modelo sugiere, el radi\'ologo decide.

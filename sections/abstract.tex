@@ -1,0 +1,12 @@
+% =============================================================================
+% RESUMEN
+% =============================================================================
+\begin{abstract}
+\noindent
+\textbf{Resumen.}
+La radiograf\'ia de t\'orax representa el 40\% del volumen global de imagen diagn\'ostica, pero dos tercios de la poblaci\'on mundial carecen de acceso a servicios de radiolog\'ia y los radi\'ologos disponibles enfrentan tasas de error del 3--5\% agravadas por fatiga. El presente trabajo desarrolla un sistema de clasificaci\'on autom\'atica multi-etiqueta de cinco patolog\'ias tor\'acicas urgentes (Cardiomegaly, Edema, Consolidation, Atelectasis, Pleural Effusion) mediante Deep Learning con transfer learning especializado. Utilizando el dataset CheXpert (224,316 radiograf\'ias, Stanford University) y un backbone DenseNet121 preentrenado en m\'as de 500,000 radiograf\'ias reales (TorchXRayVision), se alcanz\'o un AUC de 0.869 [IC 95\%: 0.844--0.893], mejorando en 8.4\% al baseline con ImageNet. El modelo fue validado externamente contra NIH ChestX-ray14 (ca\'ida de 7.2\%), auditado por equidad de g\'enero (gap de 9.2\% en Atelectasis), calibrado mediante temperature scaling, y su interpretabilidad verificada con Grad-CAM descartando shortcut learning. Se export\'o a formato ONNX con normalizaci\'on embebida para inferencia en $\sim$20ms, eliminando training-serving skew. El sistema se propone como herramienta de triaje bajo supervisi\'on humana obligatoria, con un impacto estimado de 5x en capacidad diagn\'ostica y ROI de 24x, alineado con los marcos regulatorios FDA, AI Act europeo y las recomendaciones de la OMS.
+
+\vspace{0.3cm}
+\noindent
+\textbf{Palabras clave:} Deep Learning, radiograf\'ias de t\'orax, clasificaci\'on multi-etiqueta, transfer learning, CheXpert, TorchXRayVision, ONNX, explicabilidad (Grad-CAM), equidad algor\'itmica, triaje autom\'atico.
+\end{abstract}

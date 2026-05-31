@@ -1,0 +1,50 @@
+% =============================================================================
+% 2. PREPARACION Y LIMPIEZA DE DATOS
+% =============================================================================
+\section{Preparaci\'on y limpieza de datos}
+\label{sec:data-preparation}
+
+\subsection{Selecci\'on del dataset}
+
+Se utiliz\'o CheXpert (Chest eXpert), un dataset a gran escala publicado por la Universidad de Stanford que contiene 224,316 radiograf\'ias de t\'orax de 65,240 pacientes \cite{irvin2019chexpert}. El dataset fue seleccionado por su escala suficiente para entrenar redes profundas, su anotaci\'on multi-etiqueta con manejo expl\'icito de incertidumbre, su posici\'on como benchmark est\'andar con leaderboard p\'ublico, y su acceso abierto v\'ia Kaggle. La documentaci\'on estructurada del dataset (datasheet) fue publicada por \cite{garbin2021datasheet}.
+
+\subsection{Estructuraci\'on seg\'un Tidy Data}
+
+El dataset fue estructurado siguiendo los tres principios can\'onicos de Tidy Data \cite{wickham2014tidy}: cada variable forma una columna (5 columnas binarias de patolog\'ia, m\'as path y metadatos), cada observaci\'on forma una fila (una radiograf\'ia), y todos los valores son consistentes (Float32, sin NaN, sin tipos mixtos). Esta estructuraci\'on garantiza reproducibilidad y compatibilidad con el pipeline de PyTorch DataLoader.
+
+\subsection{Pipeline de preprocesamiento}
+
+El preprocesamiento sigui\'o las pr\'acticas dominantes del campo \cite{calli2021deep}. La Tabla~\ref{tab:pipeline} resume los pasos aplicados:
+
+\begin{table}[H]
+\centering
+\caption{Pipeline de preprocesamiento aplicado.}
+\label{tab:pipeline}
+\small
+\begin{tabular}{clp{3.2cm}}
+\toprule
+\textbf{\#} & \textbf{Paso} & \textbf{Justificaci\'on} \\
+\midrule
+1 & U-Zeros        & Incertidumbre $\to$ 0 (baseline conservadora \cite{irvin2019chexpert}) \\
+2 & Imputaci\'on NaN & NaN $\to$ 0 (no mencionado = ausente) \\
+3 & Filtro frontal & Eliminar vistas laterales ($\sim$20\% del dataset) \\
+4 & Excluir sexo   & V de Cram\'er $<$ 0.1; riesgo de sesgo \cite{gichoya2022ai} \\
+5 & Normalizar XRV & Rango $[-1024, 1024]$ \cite{cohen2022torchxrayvision} \\
+6 & Augmentation   & Flip-H + rotaci\'on $\pm$10\textdegree \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Manejo de etiquetas inciertas.} CheXpert introduce etiquetas de incertidumbre (-1) que admiten m\'ultiples estrategias. El paper original \cite{irvin2019chexpert} demostr\'o que la estrategia \'optima depende de la patolog\'ia: U-Ones para Atelectasis/Edema, U-MultiClass para Cardiomegaly/Pleural Effusion. Trabajos posteriores \cite{pham2021interpreting} alcanzaron AUC = 0.940 mediante Label Smoothing Regularization. Se eligi\'o U-Zeros como baseline conservadora y reproducible, reconociendo que es sub\'optima para Atelectasis y Edema.
+
+\textbf{Filtrado de vistas.} Se conservaron \'unicamente vistas frontales (AP/PA), eliminando $\sim$32,000 vistas laterales. Esta decisi\'on se alinea con la pr\'actica est\'andar del campo \cite{calli2021deep}: mezclar vistas obliga al modelo a aprender dos ``lenguajes visuales'' distintos, reduciendo el rendimiento en $\sim$1--2 puntos AUC.
+
+\textbf{Normalizaci\'on.} Se aplic\'o la normalizaci\'on est\'andar de TorchXRayVision \cite{cohen2022torchxrayvision}: $(2 \times (img/255) - 1) \times 1024$, mapeando p\'ixeles al rango $[-1024, 1024]$. Esta normalizaci\'on es obligatoria para preservar la compatibilidad con los pesos preentrenados sobre $\sim$500K radiograf\'ias.
+
+\textbf{Resoluci\'on.} Se utiliz\'o 224$\times$224 p\'ixeles, compatible con los pesos DenseNet121 de TorchXRayVision. Seg\'un \cite{sabottke2020resolution}, el AUC se estabiliza entre 256--320 para las patolog\'ias de competencia; 224 es suficiente para Cardiomegaly, Edema y Pleural Effusion.
+
+\textbf{Data augmentation.} Se aplicaron \'unicamente augmentations geom\'etricas conservadoras: flip horizontal (p=0.5) y rotaci\'on $\pm$10\textdegree. No se utiliz\'o flip vertical por su incompatibilidad anat\'omica con la orientaci\'on tor\'acica \cite{calli2021deep}.
+
+\textbf{Split de datos.} Se utiliz\'o el split oficial por paciente \cite{garbin2021datasheet} ($\sim$191K entrenamiento, 234 validaci\'on), que previene data leakage entre estudios del mismo paciente \cite{rouzrokh2022mitigating}. Se reconoce la limitaci\'on del tama\~no reducido del validation set (IC 95\% del AUC $\sim\pm$0.03--0.05), por lo que se complement\'o con validaci\'on externa (Secci\'on~\ref{sec:results}).
+
+Resultado final: $\sim$190,000 im\'agenes frontales de entrenamiento y $\sim$200 de validaci\'on, en formato tensor $(1, 224, 224)$, float32.

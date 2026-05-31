@@ -1,0 +1,128 @@
+% =============================================================================
+% Chest Xpert AI - Multi-Label Chest Pathology Classifier
+% Academic Product (PAC) - Scientific Article
+% =============================================================================
+\documentclass[9pt, twocolumn, a4paper]{extarticle}
+
+% --- Core Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Use spanish for captions and content
+\usepackage[spanish]{babel}
+
+% Layout and margins
+\usepackage[top=2cm, bottom=2cm, left=1.8cm, right=1.8cm]{geometry}
+
+% Reduce whitespace around sections and floats
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{6pt plus 2pt minus 2pt}{2pt plus 1pt}
+\titlespacing*{\subsection}{0pt}{4pt plus 2pt minus 1pt}{1pt plus 1pt}
+
+% Graphics and figures
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[font=small, labelfont=bf, skip=4pt]{caption}
+
+% Tables
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\setlength{\tabcolsep}{4pt}
+
+% Lists (compact)
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=*, topsep=2pt, parsep=0pt, itemsep=1pt}
+
+% Mathematics and symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors and links
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+
+% Bibliography
+\usepackage[numbers, sort&compress]{natbib}
+\setlength{\bibsep}{2pt}
+
+% Headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize Chest Xpert AI - Clasificaci\'on de Patolog\'ias Tor\'acicas}
+\fancyhead[R]{\footnotesize \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Tighter column separation
+\setlength{\columnsep}{0.6cm}
+
+% Prevent vertical stretching between paragraphs to fill columns
+\raggedbottom
+
+% Reduce space before/after floats
+\setlength{\floatsep}{2pt}
+\setlength{\textfloatsep}{4pt}
+\setlength{\intextsep}{2pt}
+\setlength{\abovecaptionskip}{3pt}
+\setlength{\belowcaptionskip}{0pt}
+
+% Reduce abstract spacing
+\usepackage{abstract}
+\setlength{\absleftindent}{0pt}
+\setlength{\absrightindent}{0pt}
+\renewcommand{\abstractnamefont}{\normalfont\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont\small}
+
+% =============================================================================
+% DOCUMENT METADATA
+% =============================================================================
+\title{
+    \vspace{-2cm}
+    \large\textbf{Chest Xpert AI: Clasificaci\'on Autom\'atica Multi-Etiqueta de Patolog\'ias Tor\'acicas mediante Deep Learning con Transfer Learning Especializado} \\[0.1cm]
+    \small\normalfont Producto Acad\'emico --- Aprendizaje Autom\'atico --- Maestr\'ia en Inteligencia Artificial
+}
+
+\author{
+    \textbf{Angel Hincho Jove}\textsuperscript{1} \quad
+    \textbf{Angel Espinoza Julca}\textsuperscript{2} \quad
+    \textbf{Juan Martinez Yupanqui}\textsuperscript{3} \\[0.1cm]
+    \small\textsuperscript{1}\textit{Universidad Continental, Facultad de Ingenier\'ia} \\
+    \small\texttt{72190199@continental.edu.pe}\textsuperscript{1} \quad
+    \small\texttt{42702445@continental.edu.pe}\textsuperscript{2} \quad
+    \small\texttt{08646067@continental.edu.pe}\textsuperscript{3}
+}
+
+\date{\vspace{-0.3cm}\small\today}
+
+% =============================================================================
+% DOCUMENT START
+% =============================================================================
+\begin{document}
+
+\twocolumn[
+    \maketitle
+    \vspace{-0.6cm}
+    \begin{@twocolumnfalse}
+        \input{sections/abstract}
+    \end{@twocolumnfalse}
+    \vspace{0.2cm}
+]
+
+% --- Sections ---
+\input{sections/introduction}
+\input{sections/data-preparation}
+\input{sections/exploratory-analysis}
+\input{sections/modeling}
+\input{sections/business-model}
+\input{sections/results}
+\input{sections/ethics}
+\input{sections/conclusions}
+\input{sections/appendix}
+
+% --- Bibliography ---
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

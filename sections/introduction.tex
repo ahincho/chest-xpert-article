@@ -1,0 +1,25 @@
+% =============================================================================
+% 1. INTRODUCCION / DEFINICION DEL PROBLEMA
+% =============================================================================
+\section{Introducci\'on}
+\label{sec:introduction}
+
+\subsection{Contexto del problema}
+
+La radiograf\'ia de t\'orax es el examen de imagen diagn\'ostica m\'as solicitado a nivel mundial, representando aproximadamente el 40\% de los 3.6 mil millones de estudios de imagen anuales \cite{who2016xray, ahmad2023cxr}. A pesar de este volumen, dos tercios de la poblaci\'on mundial carecen de acceso a servicios b\'asicos de radiolog\'ia \cite{who2023imaging}, y la fuerza laboral disponible enfrenta d\'eficits estructurales: el Reino Unido reporta un d\'eficit del 29\% de radi\'ologos consultores, proyectado al 39\% para 2029 \cite{rcr2025census}, mientras que pa\'ises de ingresos bajos operan con ratios de hasta 1 radi\'ologo por mill\'on de habitantes frente a aproximadamente 100 por mill\'on en naciones de altos ingresos \cite{mollura2020ai}.
+
+Bajo estas condiciones, los radi\'ologos deben sostener ritmos de interpretaci\'on de una imagen cada 3--4 segundos durante turnos de 8 horas \cite{mcdonald2015workload}, generando una tasa basal de error diagn\'ostico del 3--5\% que escala hasta aproximadamente 30\% al evaluar ex\'amenes con hallazgos anormales \cite{bruno2015error, brady2017error}. La fatiga por turnos extendidos agrava este riesgo, con errores m\'edicos ocurriendo 12.1\% m\'as frecuentemente durante turnos nocturnos y rotativos \cite{ahrq2024fatigue}. Solo en Inglaterra, cerca de un mill\'on de resultados de imagen se retrasaron m\'as de un mes en 2025 \cite{rcr2025census}.
+
+\subsection{La IA como soluci\'on potencial}
+
+El Deep Learning aplicado a radiograf\'ias de t\'orax ha demostrado rendimiento a nivel de radi\'ologo desde que CheXNet alcanz\'o F1 = 0.435 frente a F1 = 0.387 del radi\'ologo promedio en detecci\'on de neumon\'ia \cite{rajpurkar2017chexnet}. M\'as recientemente, el ensayo cl\'inico aleatorizado MASAI demostr\'o una reducci\'on del 44\% en la carga de doble lectura sin comprometer las tasas de detecci\'on de c\'ancer en 80,000 pacientes \cite{lang2023masai}, y estudios prospectivos muestran una reducci\'on del 17.6\% en el tiempo de lectura para radiograf\'ias normales con asistencia de IA \cite{shin2023ai}. Sin embargo, revisiones metodol\'ogicas cr\'iticas han demostrado que 0 de m\'as de 300 modelos publicados de COVID-19 en CXR fueron cl\'inicamente \'utiles debido a fugas de datos y falta de validaci\'on externa \cite{roberts2021pitfalls}, subrayando la necesidad de evaluaci\'on rigurosa.
+
+Adem\'as, persisten sesgos demogr\'aficos documentados: clasificadores de IA entrenados en CheXpert, MIMIC-CXR y NIH ChestX-ray14 subdiagnostican sistem\'aticamente a pacientes femeninas, afrodescendientes e hispanas en hasta 9--10 puntos porcentuales \cite{seyyedkalantari2021bias}, y el desbalance de g\'enero en datasets de entrenamiento produce clasificadores con AUC significativamente menor para el grupo subrepresentado \cite{larrazabal2020gender}. Estos hallazgos exigen que cualquier modelo orientado cl\'inicamente incluya auditor\'ia de equidad y verificaci\'on de interpretabilidad.
+
+\subsection{Soluci\'on propuesta}
+
+Se desarrolla un sistema de clasificaci\'on multi-etiqueta basado en Deep Learning que detecta simult\'aneamente cinco patolog\'ias tor\'acicas urgentes---Cardiomegaly, Edema, Consolidation, Atelectasis y Pleural Effusion---a partir de radiograf\'ias frontales de t\'orax. El sistema utiliza el dataset CheXpert (224,316 radiograf\'ias de 65,240 pacientes) \cite{irvin2019chexpert} con un backbone DenseNet121 preentrenado en m\'as de 500,000 radiograf\'ias reales mediante TorchXRayVision \cite{cohen2022torchxrayvision}, y est\'a dise\~nado como herramienta de triaje y priorizaci\'on para radi\'ologos, no como reemplazo.
+
+\subsection{Objetivo}
+
+Aplicar un modelo de Aprendizaje Autom\'atico (red neuronal convolucional con transfer learning especializado) para resolver la tarea de clasificaci\'on multi-etiqueta de patolog\'ias tor\'acicas, evaluando su rendimiento, generalizaci\'on a datos externos, interpretabilidad mediante Grad-CAM, equidad de g\'enero e impacto potencial en la eficiencia operativa hospitalaria.

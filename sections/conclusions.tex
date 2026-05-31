@@ -1,0 +1,50 @@
+% =============================================================================
+% 8. CONCLUSIONES
+% =============================================================================
+\section{Conclusiones}
+\label{sec:conclusions}
+
+El presente trabajo demuestra que la aplicaci\'on de Deep Learning con transfer learning especializado en imagen m\'edica (TorchXRayVision) permite alcanzar rendimiento cl\'inicamente \'util (AUC = 0.869, IC 95\%: 0.844--0.893) para el screening autom\'atico de cinco patolog\'ias tor\'acicas urgentes. Las principales contribuciones son:
+
+\begin{enumerate}
+    \item \textbf{Validaci\'on del conocimiento de dominio}: un backbone preentrenado en 500k+ radiograf\'ias supera por 8.4\% a uno preentrenado en im\'agenes gen\'ericas (ImageNet), confirmando que el transfer learning especializado es cr\'itico en imagen m\'edica.
+    \item \textbf{Generalizaci\'on inter-institucional}: la validaci\'on externa contra NIH ChestX-ray14 (ca\'ida de 7.2\%) confirma que el modelo generaliza de forma moderada a datos de otra instituci\'on, aceptable para screening pero no para diagn\'ostico definitivo sin adaptaci\'on local.
+    \item \textbf{Detecci\'on y documentaci\'on de sesgo}: se identific\'o un gap de equidad de 9.2\% en Atelectasis (infradiagn\'ostico en mujeres), consistente con la literatura \cite{seyyedkalantari2021bias}, proponiendo mitigaciones concretas alineadas con el marco regulatorio vigente.
+    \item \textbf{Verificaci\'on de interpretabilidad}: Grad-CAM confirm\'o atenci\'on anat\'omica correcta en las 5 patolog\'ias, descartando shortcut learning.
+    \item \textbf{Preparaci\'on para producci\'on}: el modelo se export\'o a ONNX con normalizaci\'on embebida (prevenci\'on de training-serving skew), logrando inferencia en $\sim$20ms compatible con flujo cl\'inico en tiempo real.
+\end{enumerate}
+
+El sistema genera impacto directo en la eficiencia operativa hospitalaria: 5x en capacidad diagn\'ostica por radi\'ologo, reducci\'on del 80\% en tiempos de lectura, y un ROI estimado de 24x sobre la inversi\'on en infraestructura \cite{vanleeuwen2024roi}. Se posiciona como herramienta viable de apoyo al diagn\'ostico radiol\'ogico, siempre bajo supervisi\'on humana obligatoria conforme al AI Act europeo \cite{euaiact2024} y las recomendaciones de las cinco sociedades radiol\'ogicas internacionales \cite{brady2024multisociety}.
+
+\subsection{Limitaciones}
+
+\begin{itemize}
+    \item Validaci\'on sobre set peque\~no ($\sim$200 im\'agenes): IC amplio ($\pm$0.03--0.05).
+    \item Estrategia U-Zeros sub\'optima para Atelectasis/Edema seg\'un el paper original \cite{irvin2019chexpert}.
+    \item Gap de fairness en Atelectasis requiere mitigaci\'on antes de despliegue cl\'inico.
+    \item Domain shift moderado (7.2\%) exige adaptaci\'on local por hospital.
+\end{itemize}
+
+\subsection{Trabajo futuro}
+
+\textbf{Corto plazo:}
+\begin{itemize}
+    \item API con dos endpoints: \texttt{/predict} (ONNX Runtime, $\sim$20ms) y \texttt{/explain} (PyTorch + Grad-CAM, $\sim$150ms).
+    \item Despliegue en AWS: FastAPI + ECS Fargate + API Gateway.
+    \item Threshold \'optimo por patolog\'ia mediante an\'alisis ROC (no 0.5 universal).
+\end{itemize}
+
+\textbf{Mediano plazo:}
+\begin{itemize}
+    \item Implementar Label Smoothing Regularization (U-SelfTrained) para Atelectasis/Edema \cite{pham2021interpreting}.
+    \item Validaci\'on externa completa con NIH ChestX-ray14 (112k im\'agenes) y MIMIC-CXR.
+    \item Integrar DVC para versionado de datos y trazabilidad del pipeline.
+\end{itemize}
+
+\textbf{Largo plazo:}
+\begin{itemize}
+    \item Reentrenamiento autom\'atico con CI/CD (GitHub Actions + SageMaker).
+    \item Monitoreo de data drift en producci\'on con alertas autom\'aticas.
+    \item Certificaci\'on regulatoria (FDA 510(k) / marcado CE Clase IIa).
+    \item Migraci\'on a Vision Transformer (ViT) como backbone alternativo: los ViT generan mapas de atenci\'on nativos sin necesidad de Grad-CAM, eliminando el backward pass para explicabilidad y acelerando XAI en producci\'on.
+\end{itemize}
